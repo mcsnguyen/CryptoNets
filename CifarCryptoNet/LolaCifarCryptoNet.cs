@@ -6,6 +6,7 @@ using NeuralNetworks;
 using HEWrapper;
 
 
+
 namespace CifarCryptoNet
 {
     public static class LolaCifarCryptoNet
@@ -34,7 +35,6 @@ namespace CifarCryptoNet
                 Scale = 128.0
             };
 
-
             var encryptLayer = new EncryptLayer() { Source = readerLayer, Factory = factory };
 
             var convLayer1 = new LLPoolLayer()
@@ -54,8 +54,6 @@ namespace CifarCryptoNet
             var VectorizeLayer2 = new LLVectorizeLayer() { Source = convLayer1 };
 
             var activationLayer3 = new SquareActivation() { Source = VectorizeLayer2 };
-
-         
 
             var convEngine = new ConvolutionEngine()
             {
@@ -90,9 +88,14 @@ namespace CifarCryptoNet
 
             var network = denseLayer6;
             Console.WriteLine("Preparing");
+            // Visualize layer construction
+            for (var p = (INetwork)network; p != null; p = p.Source)
+                if (p is BaseLayer b) b.Verbose = true;
+
             network.PrepareNetwork();
+
             var m = network.GetNext();
-            Utils.Show(m, factory);
+            Utils.Show(m, factory, readerLayer.Labels);
             Console.WriteLine("Max computed value {0} ({1})", RawMatrix.Max, Math.Log(RawMatrix.Max) / Math.Log(2));
         }
     }

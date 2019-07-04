@@ -19,7 +19,7 @@ namespace CryptoNets
 
             var ReaderLayer = new BatchReader
             {
-                FileName = fileName,
+                FileName = fileName, //Used to create Labels[] --> [0,9] for each input
                 SparseFormat = true,
                 MaxSlots = batchSize,
                 NormalizationFactor = 1.0 / 256.0,
@@ -29,6 +29,7 @@ namespace CryptoNets
             var EncryptedLayer = new EncryptLayer() { Source = ReaderLayer, Factory = Factory};
 
             var StartTimingLayer = new TimingLayer() { Source = EncryptedLayer, StartCounters = new string[] { "Batch-Time" } };
+            //var StartTimingLayer = new TimingLayer() { Source = ReaderLayer, StartCounters = new string[] { "Batch-Time" } };
 
             var ConvLayer1 = new PoolLayer()
             {
@@ -89,11 +90,15 @@ namespace CryptoNets
                     Utils.ProcessInEnv(env =>
                     {
                         var decrypted = m.Decrypt(env);
+
+                        Console.WriteLine("Row: " + decrypted.RowCount + ", Column: " + decrypted.ColumnCount);
                         for (int i = 0; i < decrypted.RowCount; i++)
                         {
                             int pred = 0;
                             for (int j = 1; j < decrypted.ColumnCount; j++)
                             {
+                                Console.WriteLine("I, J: " + decrypted[i, j] + ", I, P: " + decrypted[i, pred]);
+                                //Row == input_image, Columns == classification, Highest column value == predicted classification
                                 if (decrypted[i, j] > decrypted[i, pred]) pred = j;
                             }
                             if (pred != ReaderLayer.Labels[i]) errs++;

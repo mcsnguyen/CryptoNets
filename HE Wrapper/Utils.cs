@@ -110,14 +110,30 @@ namespace HEWrapper
             }, factory);
         }
 
-        static public void Show(IMatrix m, IFactory factory)
+        static public void Show(IMatrix m, IFactory factory, int[] trueLabels)
         {
             Utils.ProcessInEnv(env =>
             {
                 var data = m.Decrypt(env);
-                var lines = data.EnumerateRows().Select(row => RowToString(row));
+                var lines = data.EnumerateRows().Select(row => RowToString(row));               
+                double min;
+                double max = Convert.ToDouble(lines.GetEnumerator().MoveNext());
+                int predictedLabel = 0;
+                int position = 0;
+
                 foreach (var l in lines)
+                {
+                    min = Convert.ToDouble(l);
+                    if (min > max)
+                    {
+                        max = min;
+                        predictedLabel = position;
+                    }
+                    position += 1;
                     Console.WriteLine(l);
+                }
+
+                Console.WriteLine("Prediction {0} Label {1}", predictedLabel, trueLabels[0]);             
             }, factory);
         }
     }

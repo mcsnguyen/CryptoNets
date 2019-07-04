@@ -103,6 +103,11 @@ namespace NeuralNetworks
                 }
             }
             Labels = labelsList.ToArray();
+
+            for(int i = 0; i < Labels.Length; i++)
+            {
+                Console.WriteLine(Labels[i]);
+            }
             
             var m = new RawMatrix(Matrix<double>.Build.DenseOfRowVectors(instanceList), Scale, EMatrixFormat.ColumnMajor, 0);
             return m;

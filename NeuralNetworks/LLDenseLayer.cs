@@ -42,11 +42,13 @@ namespace NeuralNetworks
 
             if (InputFormat == EVectorFormat.dense)
             {
+                Console.WriteLine("Input Format: Dense");
                 BiasVector = Factory.GetPlainVector(Vector<Double>.Build.DenseOfArray(Bias), (ForceDenseFormat) ? EVectorFormat.dense : EVectorFormat.sparse, Source.GetOutputScale() * WeightsScale);
                 WeightsMatrix = Factory.GetPlainMatrix(Matrix<Double>.Build.DenseOfRowMajor(Bias.Length, Weights.Length / Bias.Length, Weights), EMatrixFormat.RowMajor, WeightsScale);
             }
             else
             {
+                Console.WriteLine("Input Format: Sparse");
                 BiasVector = Factory.GetPlainVector(Vector<Double>.Build.DenseOfArray(Bias), EVectorFormat.dense, Source.GetOutputScale() * WeightsScale);
                 WeightsMatrix = Factory.GetPlainMatrix(Matrix<Double>.Build.DenseOfRowMajor(Bias.Length, Weights.Length / Bias.Length, Weights), EMatrixFormat.ColumnMajor, WeightsScale);
             }

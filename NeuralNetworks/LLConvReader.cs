@@ -107,12 +107,17 @@ namespace NeuralNetworks
                 var f = line.Split(Delimiter);
                 if (SparseFormat)
                 {
+                    Console.WriteLine("Sparse Format");
                     Labels = new int[] { int.Parse(f[0]) };
                     dim = int.Parse(f[1]);
                     var valueList = new List<Tuple<int, double>>();
                     for (int k = 2; k < f.Length; k++)
                     {
                         string[] sub = f[k].Split(':');
+                        for(int i = 0; i < sub.Length; i++)
+                        {
+                            Console.WriteLine(sub[i]);
+                        }
                         int cordinate = int.Parse(sub[0]);
                         double value = double.Parse(sub[1]);
                         valueList.Add(new Tuple<int, double>(cordinate, value * NormalizationFactor));
@@ -122,7 +127,7 @@ namespace NeuralNetworks
                 }
                 else
                 {  //dense format
-
+                    Console.WriteLine("Dense Format");
                     dim = f.Length;
                     if (LabelColumn >= dim)
                         Labels = new int[] { int.MaxValue };
